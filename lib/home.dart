@@ -9,7 +9,7 @@ import 'easychat.dart';
 import 'easymarket.dart';
 import 'opcoes.dart';
 import 'sobre.dart';
-import 'sell_ia.dart' hide Sobre;
+import 'sell_ia.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
