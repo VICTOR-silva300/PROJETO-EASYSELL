@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'cadastro.dart';
 import 'esqueci_senha.dart';
 import 'home.dart';
+import 'tema.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,6 +18,8 @@ class _LoginPageState extends State<LoginPage> {
 
   bool mostrarSenha = false;
 
+  AppCores get c => context.cores;
+
   @override
   void dispose() {
     emailController.dispose();
@@ -29,8 +33,18 @@ class _LoginPageState extends State<LoginPage> {
 
     if (email.isEmpty || senha.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Preencha o e-mail e a senha.'),
+        SnackBar(
+          content: const Text(
+            'Preencha o e-mail e a senha.',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          backgroundColor: c.fundo2,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
         ),
       );
       return;
@@ -65,142 +79,257 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F1422),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF252C43),
-              Color(0xFF171B2A),
-              Color(0xFF0F1422),
-            ],
+      backgroundColor: c.fundo,
+      body: Stack(
+        children: [
+          Positioned(
+            top: -150,
+            left: -120,
+            child: _brilho(
+              c.roxo,
+              340,
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 30,
-              ),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 420,
-                ),
-                child: Column(
-                  children: [
-                    _logo(),
-                    const SizedBox(height: 40),
-                    _loginCard(),
-                    const SizedBox(height: 20),
-                    _botoes(),
-                    const SizedBox(height: 28),
-                    _rodape(),
-                  ],
+          Positioned(
+            top: 260,
+            right: -180,
+            child: _brilho(
+              c.azul,
+              360,
+            ),
+          ),
+          Positioned(
+            bottom: -180,
+            left: 80,
+            child: _brilho(
+              c.roxoClaro,
+              330,
+            ),
+          ),
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(22, 28, 22, 28),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: 430,
+                  ),
+                  child: Column(
+                    children: [
+                      _cabecalho(),
+                      const SizedBox(height: 38),
+                      _cardLogin(),
+                      const SizedBox(height: 18),
+                      _seguranca(),
+                      const SizedBox(height: 25),
+                      _rodape(),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _brilho(Color cor, double tamanho) {
+    return IgnorePointer(
+      child: Container(
+        width: tamanho,
+        height: tamanho,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: cor.withAlpha(32),
+              blurRadius: 120,
+              spreadRadius: 35,
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _logo() {
+  Widget _cabecalho() {
     return Column(
       children: [
         Container(
-          width: 72,
-          height: 72,
+          width: 82,
+          height: 82,
           decoration: BoxDecoration(
-            color: const Color(0xFF6200FF).withValues(alpha: 0.12),
-            shape: BoxShape.circle,
+            gradient: AppCores.gradRoxo,
+            borderRadius: BorderRadius.circular(25),
             border: Border.all(
-              color: const Color(0xFF6200FF).withValues(alpha: 0.35),
+              color: Colors.white.withAlpha(18),
             ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF6200FF).withValues(alpha: 0.15),
-                blurRadius: 25,
+                color: c.roxo.withAlpha(85),
+                blurRadius: 32,
+                spreadRadius: 2,
+                offset: const Offset(0, 10),
               ),
             ],
           ),
-          child: const Icon(
-            Icons.shopping_bag_outlined,
-            color: Color(0xFF7B2CFF),
-            size: 34,
+          child: const Center(
+            child: Text(
+              'E',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 39,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -2,
+              ),
+            ),
           ),
         ),
-        const SizedBox(height: 14),
-        const Text(
-          'EASYSELL',
+        const SizedBox(height: 17),
+        Text(
+          'EasySell',
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 30,
+            color: c.texto,
+            fontSize: 31,
             fontWeight: FontWeight.w900,
-            letterSpacing: 2,
+            letterSpacing: -1.2,
           ),
         ),
         const SizedBox(height: 5),
-        Text(
-          'GESTÃO DE VENDAS INTELIGENTE',
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.55),
-            fontSize: 9,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1.5,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 22,
+              height: 2,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.transparent,
+                    c.roxo,
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            const SizedBox(width: 9),
+            Text(
+              'GESTÃO INTELIGENTE',
+              style: TextStyle(
+                color: c.textoFraco,
+                fontSize: 8,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.7,
+              ),
+            ),
+            const SizedBox(width: 9),
+            Container(
+              width: 22,
+              height: 2,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    c.roxo,
+                    Colors.transparent,
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ],
         ),
       ],
     );
   }
 
-  Widget _loginCard() {
+  Widget _cardLogin() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(26),
+      padding: const EdgeInsets.fromLTRB(21, 23, 21, 21),
       decoration: BoxDecoration(
-        color: const Color(0xFF555965).withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            c.superficie,
+            c.fundo2,
+          ],
+        ),
+        borderRadius: BorderRadius.circular(28),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.08),
+          color: c.bordaMedia,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.28),
-            blurRadius: 30,
-            offset: const Offset(0, 15),
+            color: Colors.black.withAlpha(55),
+            blurRadius: 35,
+            offset: const Offset(0, 18),
+          ),
+          BoxShadow(
+            color: c.roxo.withAlpha(18),
+            blurRadius: 40,
+            spreadRadius: -5,
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Center(
-            child: Text(
-              'BEM-VINDO DE VOLTA!',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
+          Row(
+            children: [
+              Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      c.roxo.withAlpha(55),
+                      c.roxoClaro.withAlpha(25),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(13),
+                  border: Border.all(
+                    color: c.roxo.withAlpha(45),
+                  ),
+                ),
+                child: Icon(
+                  Icons.lock_open_rounded,
+                  color: c.roxoClaro,
+                  size: 20,
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 6),
-          Center(
-            child: Text(
-              'Entre na sua conta para continuar',
-              style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.65),
-                fontSize: 11,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Bem-vindo de volta!',
+                      style: TextStyle(
+                        color: c.texto,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.4,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      'Entre para continuar gerenciando seu negócio.',
+                      style: TextStyle(
+                        color: c.textoSuave,
+                        fontSize: 9,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
-          const SizedBox(height: 28),
+          const SizedBox(height: 25),
+          _linhaDecorativa(),
+          const SizedBox(height: 23),
           _label('E-mail'),
           const SizedBox(height: 8),
           _campo(
@@ -209,13 +338,13 @@ class _LoginPageState extends State<LoginPage> {
             icon: Icons.email_outlined,
             keyboardType: TextInputType.emailAddress,
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 17),
           _label('Senha'),
           const SizedBox(height: 8),
           _campo(
             controller: senhaController,
             hint: 'Digite sua senha',
-            icon: Icons.lock_outline,
+            icon: Icons.lock_outline_rounded,
             obscureText: !mostrarSenha,
             suffixIcon: IconButton(
               onPressed: () {
@@ -223,47 +352,92 @@ class _LoginPageState extends State<LoginPage> {
                   mostrarSenha = !mostrarSenha;
                 });
               },
+              splashRadius: 20,
               icon: Icon(
                 mostrarSenha
                     ? Icons.visibility_outlined
                     : Icons.visibility_off_outlined,
-                color: Colors.white.withValues(alpha: 0.55),
-                size: 18,
+                color: c.textoFraco,
+                size: 19,
               ),
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 12),
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: abrirEsqueciSenha,
               style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 2,
+                  vertical: 4,
+                ),
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: const Text(
+              child: Text(
                 'Esqueceu sua senha?',
                 style: TextStyle(
-                  color: Color(0xFF9A68FF),
+                  color: c.roxoClaro,
                   fontSize: 10,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ),
           ),
+          const SizedBox(height: 17),
+          _botaoEntrar(),
+          const SizedBox(height: 13),
+          _botaoCadastro(),
         ],
       ),
+    );
+  }
+
+  Widget _linhaDecorativa() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 1,
+            color: c.bordaSutil,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Container(
+            width: 5,
+            height: 5,
+            decoration: BoxDecoration(
+              color: c.roxoClaro,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: c.roxo.withAlpha(100),
+                  blurRadius: 8,
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            height: 1,
+            color: c.bordaSutil,
+          ),
+        ),
+      ],
     );
   }
 
   Widget _label(String texto) {
     return Text(
       texto,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 11,
-        fontWeight: FontWeight.w600,
+      style: TextStyle(
+        color: c.texto,
+        fontSize: 10,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 0.2,
       ),
     );
   }
@@ -280,117 +454,228 @@ class _LoginPageState extends State<LoginPage> {
       controller: controller,
       obscureText: obscureText,
       keyboardType: keyboardType,
-      style: const TextStyle(
-        color: Colors.white,
+      style: TextStyle(
+        color: c.texto,
         fontSize: 12,
+        fontWeight: FontWeight.w600,
       ),
+      cursorColor: c.roxoClaro,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(
-          color: Colors.white.withValues(alpha: 0.4),
-          fontSize: 11,
+          color: c.textoFraco,
+          fontSize: 10,
         ),
-        prefixIcon: Icon(
-          icon,
-          color: Colors.white.withValues(alpha: 0.5),
-          size: 18,
+        prefixIcon: Container(
+          width: 46,
+          alignment: Alignment.center,
+          child: Icon(
+            icon,
+            color: c.roxoClaro.withAlpha(190),
+            size: 18,
+          ),
+        ),
+        prefixIconConstraints: const BoxConstraints(
+          minWidth: 46,
+          minHeight: 46,
         ),
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: const Color(0xFF3E424D).withValues(alpha: 0.75),
+        fillColor: c.fundo.withAlpha(190),
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: 14,
+          horizontal: 13,
           vertical: 15,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide(
-            color: Colors.white.withValues(alpha: 0.08),
+            color: c.bordaSutil,
+            width: 1,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            color: Color(0xFF7B2CFF),
-            width: 1.5,
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide(
+            color: c.roxo.withAlpha(190),
+            width: 1.4,
           ),
         ),
       ),
     );
   }
 
-  Widget _botoes() {
-    return Row(
-      children: [
-        Expanded(
-          child: SizedBox(
-            height: 48,
-            child: ElevatedButton(
-              onPressed: entrar,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6200FF),
-                foregroundColor: Colors.white,
-                elevation: 8,
-                shadowColor: const Color(0xFF6200FF).withValues(alpha: 0.3),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: const Text(
+  Widget _botaoEntrar() {
+    return SizedBox(
+      width: double.infinity,
+      height: 53,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: AppCores.gradRoxo,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: c.roxo.withAlpha(75),
+              blurRadius: 22,
+              offset: const Offset(0, 9),
+            ),
+          ],
+        ),
+        child: ElevatedButton(
+          onPressed: entrar,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.white,
+            shadowColor: Colors.transparent,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
                 'Entrar',
                 style: TextStyle(
                   fontSize: 12,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
-            ),
+              const SizedBox(width: 9),
+              Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: Colors.white.withAlpha(25),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.arrow_forward_rounded,
+                  size: 14,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: SizedBox(
-            height: 48,
-            child: OutlinedButton(
-              onPressed: abrirCadastro,
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.white,
-                side: BorderSide(
-                  color: Colors.white.withValues(alpha: 0.35),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: const Text(
-                'Cadastrar-se',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
+      ),
+    );
+  }
+
+  Widget _botaoCadastro() {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: OutlinedButton(
+        onPressed: abrirCadastro,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: c.texto,
+          side: BorderSide(
+            color: c.bordaMedia,
+            width: 1,
+          ),
+          backgroundColor: c.superficie.withAlpha(80),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
           ),
         ),
-      ],
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.person_add_alt_1_rounded,
+              color: c.textoSuave,
+              size: 17,
+            ),
+            const SizedBox(width: 8),
+            const Text(
+              'Criar uma nova conta',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _seguranca() {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 14,
+        vertical: 11,
+      ),
+      decoration: BoxDecoration(
+        color: c.verde.withAlpha(10),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: c.verde.withAlpha(25),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.verified_user_outlined,
+            color: c.verde,
+            size: 15,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            'Ambiente seguro e protegido',
+            style: TextStyle(
+              color: c.textoSuave,
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _rodape() {
     return Column(
       children: [
-        Text(
-          'EasySell',
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.35),
-            fontSize: 10,
-            fontWeight: FontWeight.w600,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 5,
+              height: 5,
+              decoration: BoxDecoration(
+                color: c.roxoClaro,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 7),
+            Text(
+              'EASYSELL',
+              style: TextStyle(
+                color: c.textoFraco,
+                fontSize: 8,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 2,
+              ),
+            ),
+            const SizedBox(width: 7),
+            Container(
+              width: 5,
+              height: 5,
+              decoration: BoxDecoration(
+                color: c.roxoClaro,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 7),
         Text(
           'Sua gestão. Mais simples. Mais inteligente.',
           style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.25),
+            color: c.textoFraco,
             fontSize: 8,
           ),
         ),
