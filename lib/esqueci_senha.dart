@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'tema.dart'; // Mesmas cores usadas na tela de login
+
+// ============================================================
+// TELA DE RECUPERAR SENHA
+// Versão mais limpa: sem efeitos de fundo, sem card pesado e
+// com textos em tamanho legível. Segue a paleta do tema e a
+// mesma lógica de antes (validação, estado "enviado", voltar).
+// ============================================================
 class EsqueciSenha extends StatefulWidget {
   const EsqueciSenha({super.key});
 
@@ -8,9 +16,14 @@ class EsqueciSenha extends StatefulWidget {
 }
 
 class _EsqueciSenhaState extends State<EsqueciSenha> {
+  // Guarda o e-mail digitado
   final emailController = TextEditingController();
 
+  // true = mostra a mensagem de "instruções enviadas"
   bool enviado = false;
+
+  // Atalho para as cores do tema (igual à tela de login)
+  AppCores get c => context.cores;
 
   @override
   void dispose() {
@@ -18,11 +31,17 @@ class _EsqueciSenhaState extends State<EsqueciSenha> {
     super.dispose();
   }
 
+  // Valida o e-mail e mostra a confirmação
   void enviarLink() {
     if (emailController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Digite seu e-mail para continuar.'),
+        SnackBar(
+          content: const Text('Digite seu e-mail para continuar.'),
+          backgroundColor: c.fundo2,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
       return;
@@ -36,43 +55,124 @@ class _EsqueciSenhaState extends State<EsqueciSenha> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F1422),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF252C43),
-              Color(0xFF171B2A),
-              Color(0xFF0F1422),
-            ],
-          ),
+      backgroundColor: c.fundo,
+      // AppBar simples com seta de voltar (padrão de apps reais)
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        foregroundColor: c.texto,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () => Navigator.pop(context),
         ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 30,
-              ),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 420,
-                ),
-                child: Column(
-                  children: [
-                    _logo(),
-                    const SizedBox(height: 42),
-                    _card(),
+      ),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Ícone discreto, sem brilho nem gradiente
+                  Container(
+                    width: 52,
+                    height: 52,
+                    decoration: BoxDecoration(
+                      color: c.roxo.withAlpha(28),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Icon(
+                      Icons.lock_reset_rounded,
+                      color: c.roxoClaro,
+                      size: 26,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Título e explicação alinhados à esquerda
+                  Text(
+                    'Recuperar senha',
+                    style: TextStyle(
+                      color: c.texto,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Informe o e-mail cadastrado e enviaremos as '
+                    'instruções para você criar uma nova senha.',
+                    style: TextStyle(
+                      color: c.textoSuave,
+                      fontSize: 14,
+                      height: 1.45,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+
+                  // Campo de e-mail
+                  Text(
+                    'E-mail',
+                    style: TextStyle(
+                      color: c.texto,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  _campoEmail(),
+                  const SizedBox(height: 20),
+
+                  // Botão principal em cor sólida
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: ElevatedButton(
+                      onPressed: enviarLink,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: c.roxo,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      child: const Text(
+                        'Enviar link de recuperação',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Mensagem de sucesso (só depois de enviar)
+                  if (enviado) ...[
                     const SizedBox(height: 20),
-                    _voltar(),
-                    const SizedBox(height: 30),
-                    _rodape(),
+                    _sucesso(),
                   ],
-                ),
+
+                  const SizedBox(height: 24),
+
+                  // Link simples para voltar ao login
+                  Center(
+                    child: TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(
+                        'Voltar para o login',
+                        style: TextStyle(
+                          color: c.textoSuave,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -81,283 +181,72 @@ class _EsqueciSenhaState extends State<EsqueciSenha> {
     );
   }
 
-  Widget _logo() {
-    return Column(
-      children: [
-        Container(
-          width: 72,
-          height: 72,
-          decoration: BoxDecoration(
-            color: const Color(0xFF6200FF).withValues(alpha: 0.12),
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: const Color(0xFF6200FF).withValues(alpha: 0.35),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF6200FF).withValues(alpha: 0.12),
-                blurRadius: 25,
-              ),
-            ],
-          ),
-          child: const Icon(
-            Icons.lock_reset_rounded,
-            color: Color(0xFF7B2CFF),
-            size: 34,
-          ),
+  // Campo de e-mail com o mesmo estilo dos campos do login
+  Widget _campoEmail() {
+    return TextField(
+      controller: emailController,
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.done, // Botão "ok" do teclado
+      onSubmitted: (_) => enviarLink(),
+      // Voltou a digitar? Esconde a mensagem de sucesso
+      onChanged: (_) {
+        if (enviado) {
+          setState(() {
+            enviado = false;
+          });
+        }
+      },
+      style: TextStyle(color: c.texto, fontSize: 15),
+      cursorColor: c.roxoClaro,
+      decoration: InputDecoration(
+        hintText: 'voce@empresa.com',
+        hintStyle: TextStyle(color: c.textoFraco, fontSize: 15),
+        prefixIcon: Icon(Icons.email_outlined, color: c.textoFraco, size: 20),
+        filled: true,
+        fillColor: c.superficie,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 16,
         ),
-        const SizedBox(height: 14),
-        const Text(
-          'EASYSELL',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 30,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 2,
-          ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: c.bordaSutil),
         ),
-        const SizedBox(height: 4),
-        Text(
-          'GESTÃO DE VENDAS INTELIGENTE',
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.55),
-            fontSize: 9,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1.5,
-          ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: c.roxo, width: 1.5),
         ),
-      ],
-    );
-  }
-
-  Widget _card() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(26),
-      decoration: BoxDecoration(
-        color: const Color(0xFF555965).withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.08),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.28),
-            blurRadius: 30,
-            offset: const Offset(0, 15),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Container(
-            width: 52,
-            height: 52,
-            decoration: BoxDecoration(
-              color: const Color(0xFF6200FF).withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: const Icon(
-              Icons.mark_email_unread_outlined,
-              color: Color(0xFF8B4DFF),
-              size: 25,
-            ),
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            'ESQUECEU SUA SENHA?',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Informe o e-mail cadastrado e enviaremos '
-            'as instruções para recuperar sua senha.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.62),
-              fontSize: 11,
-              height: 1.5,
-            ),
-          ),
-          const SizedBox(height: 28),
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'E-mail',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: emailController,
-            keyboardType: TextInputType.emailAddress,
-            onChanged: (_) {
-              if (enviado) {
-                setState(() {
-                  enviado = false;
-                });
-              }
-            },
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-            ),
-            decoration: InputDecoration(
-              hintText: 'Digite seu e-mail',
-              hintStyle: TextStyle(
-                color: Colors.white.withValues(alpha: 0.38),
-                fontSize: 11,
-              ),
-              prefixIcon: Icon(
-                Icons.email_outlined,
-                color: Colors.white.withValues(alpha: 0.50),
-                size: 18,
-              ),
-              filled: true,
-              fillColor: const Color(0xFF3E424D).withValues(alpha: 0.75),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 14,
-                vertical: 15,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                  color: Colors.white.withValues(alpha: 0.08),
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(
-                  color: Color(0xFF7B2CFF),
-                  width: 1.5,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: ElevatedButton(
-              onPressed: enviarLink,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6200FF),
-                foregroundColor: Colors.white,
-                elevation: 8,
-                shadowColor: const Color(0xFF6200FF).withValues(alpha: 0.30),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: const Text(
-                'Enviar link de recuperação',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-          ),
-          if (enviado) ...[
-            const SizedBox(height: 18),
-            _sucesso(),
-          ],
-        ],
       ),
     );
   }
 
+  // Aviso de confirmação, simples e legível
   Widget _sucesso() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(13),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF36D399).withValues(alpha: 0.10),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: const Color(0xFF36D399).withValues(alpha: 0.22),
-        ),
+        color: c.verde.withAlpha(20),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.check_circle_outline,
-            color: Color(0xFF36D399),
-            size: 19,
-          ),
+          Icon(Icons.check_circle_outline, color: c.verde, size: 20),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
               'Enviamos as instruções para o seu e-mail. '
               'Verifique também a caixa de spam.',
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.75),
-                fontSize: 10,
+                color: c.texto,
+                fontSize: 13,
                 height: 1.4,
               ),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _voltar() {
-    return TextButton.icon(
-      onPressed: () {
-        Navigator.pop(context);
-      },
-      icon: const Icon(
-        Icons.arrow_back_rounded,
-        size: 17,
-      ),
-      label: const Text(
-        'Voltar para o login',
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      style: TextButton.styleFrom(
-        foregroundColor: Colors.white.withValues(alpha: 0.75),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 18,
-          vertical: 12,
-        ),
-      ),
-    );
-  }
-
-  Widget _rodape() {
-    return Column(
-      children: [
-        Text(
-          'EasySell',
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.35),
-            fontSize: 10,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'Sua gestão. Mais simples. Mais inteligente.',
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.25),
-            fontSize: 8,
-          ),
-        ),
-      ],
     );
   }
 }
