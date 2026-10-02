@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'cadastro.dart';
 import 'esqueci_senha.dart';
@@ -36,9 +37,7 @@ class _LoginPageState extends State<LoginPage> {
         SnackBar(
           content: const Text(
             'Preencha o e-mail e a senha.',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(fontWeight: FontWeight.w600),
           ),
           backgroundColor: c.fundo2,
           behavior: SnackBarBehavior.floating,
@@ -52,27 +51,21 @@ class _LoginPageState extends State<LoginPage> {
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (context) => const Home(),
-      ),
+      MaterialPageRoute(builder: (context) => const Home()),
     );
   }
 
   void abrirCadastro() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => const Cadastro(),
-      ),
+      MaterialPageRoute(builder: (context) => const Cadastro()),
     );
   }
 
   void abrirEsqueciSenha() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => const EsqueciSenha(),
-      ),
+      MaterialPageRoute(builder: (context) => const EsqueciSenha()),
     );
   }
 
@@ -82,39 +75,16 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: c.fundo,
       body: Stack(
         children: [
-          Positioned(
-            top: -150,
-            left: -120,
-            child: _brilho(
-              c.roxo,
-              340,
-            ),
-          ),
-          Positioned(
-            top: 260,
-            right: -180,
-            child: _brilho(
-              c.azul,
-              360,
-            ),
-          ),
-          Positioned(
-            bottom: -180,
-            left: 80,
-            child: _brilho(
-              c.roxoClaro,
-              330,
-            ),
-          ),
+          Positioned(top: -150, left: -120, child: _brilho(c.roxo, 340)),
+          Positioned(top: 260, right: -180, child: _brilho(c.azul, 360)),
+          Positioned(bottom: -180, left: 80, child: _brilho(c.roxoClaro, 330)),
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(22, 28, 22, 28),
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 430,
-                  ),
+                  constraints: const BoxConstraints(maxWidth: 430),
                   child: Column(
                     children: [
                       _cabecalho(),
@@ -157,84 +127,50 @@ class _LoginPageState extends State<LoginPage> {
   Widget _cabecalho() {
     return Column(
       children: [
-        Container(
-          width: 82,
-          height: 82,
-          decoration: BoxDecoration(
-            gradient: AppCores.gradRoxo,
-            borderRadius: BorderRadius.circular(25),
-            border: Border.all(
-              color: Colors.white.withAlpha(18),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: c.roxo.withAlpha(85),
-                blurRadius: 32,
-                spreadRadius: 2,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: const Center(
-            child: Text(
-              'E',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 39,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -2,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 17),
         Text(
-          'EasySell',
-          style: TextStyle(
+          'EASYSELL',
+          style: GoogleFonts.montserrat(
             color: c.texto,
-            fontSize: 31,
+            fontSize: 43,
             fontWeight: FontWeight.w900,
-            letterSpacing: -1.2,
+            letterSpacing: 2.5,
+            height: 1,
           ),
         ),
-        const SizedBox(height: 5),
+
+        const SizedBox(height: 10),
+
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 22,
+              width: 28,
               height: 2,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.transparent,
-                    c.roxo,
-                  ],
-                ),
+                gradient: LinearGradient(colors: [Colors.transparent, c.roxo]),
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            const SizedBox(width: 9),
+
+            const SizedBox(width: 10),
+
             Text(
               'GESTÃO INTELIGENTE',
-              style: TextStyle(
+              style: GoogleFonts.montserrat(
                 color: c.textoFraco,
                 fontSize: 8,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.7,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 2,
               ),
             ),
-            const SizedBox(width: 9),
+
+            const SizedBox(width: 10),
+
             Container(
-              width: 22,
+              width: 28,
               height: 2,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    c.roxo,
-                    Colors.transparent,
-                  ],
-                ),
+                gradient: LinearGradient(colors: [c.roxo, Colors.transparent]),
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
@@ -252,15 +188,10 @@ class _LoginPageState extends State<LoginPage> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            c.superficie,
-            c.fundo2,
-          ],
+          colors: [c.superficie, c.fundo2],
         ),
         borderRadius: BorderRadius.circular(28),
-        border: Border.all(
-          color: c.bordaMedia,
-        ),
+        border: Border.all(color: c.bordaMedia),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withAlpha(55),
@@ -284,15 +215,10 @@ class _LoginPageState extends State<LoginPage> {
                 height: 42,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      c.roxo.withAlpha(55),
-                      c.roxoClaro.withAlpha(25),
-                    ],
+                    colors: [c.roxo.withAlpha(55), c.roxoClaro.withAlpha(25)],
                   ),
                   borderRadius: BorderRadius.circular(13),
-                  border: Border.all(
-                    color: c.roxo.withAlpha(45),
-                  ),
+                  border: Border.all(color: c.roxo.withAlpha(45)),
                 ),
                 child: Icon(
                   Icons.lock_open_rounded,
@@ -317,10 +243,7 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 3),
                     Text(
                       'Entre para continuar gerenciando seu negócio.',
-                      style: TextStyle(
-                        color: c.textoSuave,
-                        fontSize: 9,
-                      ),
+                      style: TextStyle(color: c.textoSuave, fontSize: 9),
                     ),
                   ],
                 ),
@@ -368,10 +291,7 @@ class _LoginPageState extends State<LoginPage> {
             child: TextButton(
               onPressed: abrirEsqueciSenha,
               style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 2,
-                  vertical: 4,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
@@ -397,12 +317,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _linhaDecorativa() {
     return Row(
       children: [
-        Expanded(
-          child: Container(
-            height: 1,
-            color: c.bordaSutil,
-          ),
-        ),
+        Expanded(child: Container(height: 1, color: c.bordaSutil)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Container(
@@ -412,20 +327,12 @@ class _LoginPageState extends State<LoginPage> {
               color: c.roxoClaro,
               shape: BoxShape.circle,
               boxShadow: [
-                BoxShadow(
-                  color: c.roxo.withAlpha(100),
-                  blurRadius: 8,
-                ),
+                BoxShadow(color: c.roxo.withAlpha(100), blurRadius: 8),
               ],
             ),
           ),
         ),
-        Expanded(
-          child: Container(
-            height: 1,
-            color: c.bordaSutil,
-          ),
-        ),
+        Expanded(child: Container(height: 1, color: c.bordaSutil)),
       ],
     );
   }
@@ -462,18 +369,11 @@ class _LoginPageState extends State<LoginPage> {
       cursorColor: c.roxoClaro,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(
-          color: c.textoFraco,
-          fontSize: 10,
-        ),
+        hintStyle: TextStyle(color: c.textoFraco, fontSize: 10),
         prefixIcon: Container(
           width: 46,
           alignment: Alignment.center,
-          child: Icon(
-            icon,
-            color: c.roxoClaro.withAlpha(190),
-            size: 18,
-          ),
+          child: Icon(icon, color: c.roxoClaro.withAlpha(190), size: 18),
         ),
         prefixIconConstraints: const BoxConstraints(
           minWidth: 46,
@@ -488,17 +388,11 @@ class _LoginPageState extends State<LoginPage> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(
-            color: c.bordaSutil,
-            width: 1,
-          ),
+          borderSide: BorderSide(color: c.bordaSutil, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(
-            color: c.roxo.withAlpha(190),
-            width: 1.4,
-          ),
+          borderSide: BorderSide(color: c.roxo.withAlpha(190), width: 1.4),
         ),
       ),
     );
@@ -536,10 +430,7 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               const Text(
                 'Entrar',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w900,
-                ),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900),
               ),
               const SizedBox(width: 9),
               Container(
@@ -570,10 +461,7 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: abrirCadastro,
         style: OutlinedButton.styleFrom(
           foregroundColor: c.texto,
-          side: BorderSide(
-            color: c.bordaMedia,
-            width: 1,
-          ),
+          side: BorderSide(color: c.bordaMedia, width: 1),
           backgroundColor: c.superficie.withAlpha(80),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
@@ -582,18 +470,11 @@ class _LoginPageState extends State<LoginPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.person_add_alt_1_rounded,
-              color: c.textoSuave,
-              size: 17,
-            ),
+            Icon(Icons.person_add_alt_1_rounded, color: c.textoSuave, size: 17),
             const SizedBox(width: 8),
             const Text(
               'Criar uma nova conta',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w800,
-              ),
+              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800),
             ),
           ],
         ),
@@ -603,25 +484,16 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _seguranca() {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 14,
-        vertical: 11,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
       decoration: BoxDecoration(
         color: c.verde.withAlpha(10),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: c.verde.withAlpha(25),
-        ),
+        border: Border.all(color: c.verde.withAlpha(25)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.verified_user_outlined,
-            color: c.verde,
-            size: 15,
-          ),
+          Icon(Icons.verified_user_outlined, color: c.verde, size: 15),
           const SizedBox(width: 8),
           Text(
             'Ambiente seguro e protegido',
@@ -674,10 +546,7 @@ class _LoginPageState extends State<LoginPage> {
         const SizedBox(height: 7),
         Text(
           'Sua gestão. Mais simples. Mais inteligente.',
-          style: TextStyle(
-            color: c.textoFraco,
-            fontSize: 8,
-          ),
+          style: TextStyle(color: c.textoFraco, fontSize: 8),
         ),
       ],
     );
