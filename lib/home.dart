@@ -47,7 +47,7 @@ class _HomeState extends State<Home> {
         return const EasyMarket();
 
       case 6:
-        return const Sobre();
+        return Sobre(aoVoltar: () => mudarTela(0));
 
       case 7:
         return const Opcoes();

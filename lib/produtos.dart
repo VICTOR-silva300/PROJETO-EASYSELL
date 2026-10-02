@@ -156,7 +156,7 @@ class _ProdutosState extends State<Produtos> {
   int get estoqueBaixo =>
       produtos.where((p) => (p['estoque'] as int) <= limiteEstoque).length;
 
-  /// 2450.0 -> "R$ 2.450,00"
+ 
   String _preco(dynamic valor) {
     final partes = (valor as num).toStringAsFixed(2).split('.');
     final inteiro = partes[0].replaceAllMapped(
@@ -1488,7 +1488,7 @@ class _ProdutosState extends State<Produtos> {
     );
   }
 
-  /// Aceita "289,90", "289.90" e "1.250,50".
+  
   double? _lerValor(String texto) {
     var t = texto.trim().replaceAll('R\$', '').replaceAll(' ', '');
 

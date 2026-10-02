@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// Controla o tema do app inteiro.
-///
-/// Uso:
-///   AppTema.definirEscuro(false);   // muda para o tema claro
-///   AppTema.escuro                  // true se estiver no tema escuro
 class AppTema {
   AppTema._();
 
-  /// O MaterialApp escuta este notifier e reconstrói o app inteiro.
+ 
   static final ValueNotifier<ThemeMode> modo =
       ValueNotifier<ThemeMode>(ThemeMode.dark);
 
@@ -38,7 +33,7 @@ class AppTema {
   }
 }
 
-/// Paleta do EasySell. Em qualquer tela: `final c = context.cores;`
+
 extension AppCoresContext on BuildContext {
   AppCores get cores => Theme.of(this).extension<AppCores>()!;
 }
@@ -208,7 +203,7 @@ class AppCores extends ThemeExtension<AppCores> {
         colors: [sheetA, sheetB],
       );
 
-  /// O roxo do logo/botões é igual nos dois temas.
+  
   static const LinearGradient gradRoxo = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,

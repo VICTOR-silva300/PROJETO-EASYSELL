@@ -12,11 +12,7 @@ class EasyCrew extends StatefulWidget {
 class _EasyCrewState extends State<EasyCrew> {
   AppCores get c => context.cores;
 
-  static const List<String> cargos = [
-    'Vendedor',
-    'Gerente',
-    'Atendimento',
-  ];
+  static const List<String> cargos = ['Vendedor', 'Gerente', 'Atendimento'];
 
   final TextEditingController pesquisaController = TextEditingController();
 
@@ -185,7 +181,9 @@ class _EasyCrewState extends State<EasyCrew> {
                         onExtra: _mostrarTarefas,
                       ),
                       const SizedBox(height: 13),
-                      ...tarefas.take(3).map(
+                      ...tarefas
+                          .take(3)
+                          .map(
                             (tarefa) => Padding(
                               padding: const EdgeInsets.only(bottom: 10),
                               child: _cardTarefa(tarefa),
@@ -295,8 +293,9 @@ class _EasyCrewState extends State<EasyCrew> {
   // Painel principal
   // ---------------------------------------------------------------
   Widget _painelResumo() {
-    final progresso =
-        totalTarefas == 0 ? 0.0 : tarefasConcluidas / totalTarefas;
+    final progresso = totalTarefas == 0
+        ? 0.0
+        : tarefasConcluidas / totalTarefas;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -407,9 +406,7 @@ class _EasyCrewState extends State<EasyCrew> {
                     widthFactor: progresso.clamp(0.0, 1.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [c.roxo, c.roxoClaro],
-                        ),
+                        gradient: LinearGradient(colors: [c.roxo, c.roxoClaro]),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
@@ -536,12 +533,7 @@ class _EasyCrewState extends State<EasyCrew> {
     );
   }
 
-  Widget _atalho(
-    String titulo,
-    IconData icone,
-    Color cor,
-    VoidCallback onTap,
-  ) {
+  Widget _atalho(String titulo, IconData icone, Color cor, VoidCallback onTap) {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -603,7 +595,11 @@ class _EasyCrewState extends State<EasyCrew> {
                     pesquisaController.clear();
                     setState(() {});
                   },
-                  icon: Icon(Icons.close_rounded, color: c.textoSuave, size: 18),
+                  icon: Icon(
+                    Icons.close_rounded,
+                    color: c.textoSuave,
+                    size: 18,
+                  ),
                 )
               : null,
         ),
@@ -614,21 +610,17 @@ class _EasyCrewState extends State<EasyCrew> {
   Widget _filtros() {
     const opcoes = ['Todos', ...cargos];
 
-    return SizedBox(
-      height: 40,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: opcoes.length,
-        itemBuilder: (context, index) {
-          final item = opcoes[index];
-
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      child: Row(
+        children: opcoes.map((item) {
           return _chipSelecao(
             item,
             filtroSelecionado == item,
             () => setState(() => filtroSelecionado = item),
           );
-        },
+        }).toList(),
       ),
     );
   }
@@ -644,10 +636,7 @@ class _EasyCrewState extends State<EasyCrew> {
         decoration: BoxDecoration(
           gradient: selecionado
               ? const LinearGradient(
-                  colors: [
-                    Color(0x327C3AED),
-                    Color(0x187C3AED),
-                  ],
+                  colors: [Color(0x327C3AED), Color(0x187C3AED)],
                 )
               : null,
           color: selecionado ? null : c.superficie,
@@ -773,8 +762,9 @@ class _EasyCrewState extends State<EasyCrew> {
   Widget _cardMembro(Map<String, dynamic> membro) {
     final int tarefasMembro = membro['tarefas'] as int;
     final int concluidas = membro['concluidas'] as int;
-    final double progresso =
-        tarefasMembro == 0 ? 0 : concluidas / tarefasMembro;
+    final double progresso = tarefasMembro == 0
+        ? 0
+        : concluidas / tarefasMembro;
     final bool online = membro['status'] == 'Online';
     final Color corProgresso = progresso >= 0.8 ? c.verde : c.azul;
 
@@ -913,8 +903,9 @@ class _EasyCrewState extends State<EasyCrew> {
                         color: concluida ? c.textoSuave : c.texto,
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
-                        decoration:
-                            concluida ? TextDecoration.lineThrough : null,
+                        decoration: concluida
+                            ? TextDecoration.lineThrough
+                            : null,
                         decorationColor: c.textoSuave,
                       ),
                     ),
@@ -927,10 +918,7 @@ class _EasyCrewState extends State<EasyCrew> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 5,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                 decoration: BoxDecoration(
                   color: corClara(corPrioridade, 26),
                   borderRadius: BorderRadius.circular(8),
@@ -1066,10 +1054,7 @@ class _EasyCrewState extends State<EasyCrew> {
   // ---------------------------------------------------------------
   // Sheet padrão (mesmo estilo da Home)
   // ---------------------------------------------------------------
-  Future<void> _sheet({
-    required Widget child,
-    double alturaMaxima = 0.86,
-  }) {
+  Future<void> _sheet({required Widget child, double alturaMaxima = 0.86}) {
     return showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1082,9 +1067,7 @@ class _EasyCrewState extends State<EasyCrew> {
           ),
           decoration: BoxDecoration(
             gradient: c.gradSheet,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(32),
-            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
           ),
           child: SafeArea(
             top: false,
@@ -1131,10 +1114,7 @@ class _EasyCrewState extends State<EasyCrew> {
             ),
           ),
           const SizedBox(height: 5),
-          Text(
-            subtitulo,
-            style: TextStyle(color: c.textoSuave, fontSize: 11),
-          ),
+          Text(subtitulo, style: TextStyle(color: c.textoSuave, fontSize: 11)),
         ],
       ),
     );
@@ -1152,11 +1132,7 @@ class _EasyCrewState extends State<EasyCrew> {
     );
   }
 
-  Widget _campo(
-    TextEditingController controller,
-    String hint,
-    IconData icon,
-  ) {
+  Widget _campo(TextEditingController controller, String hint, IconData icon) {
     return TextField(
       controller: controller,
       cursorColor: c.roxoClaro,
@@ -1186,8 +1162,9 @@ class _EasyCrewState extends State<EasyCrew> {
   void _detalhesMembro(Map<String, dynamic> membro) {
     final int tarefasMembro = membro['tarefas'] as int;
     final int concluidas = membro['concluidas'] as int;
-    final double progresso =
-        tarefasMembro == 0 ? 0 : concluidas / tarefasMembro;
+    final double progresso = tarefasMembro == 0
+        ? 0
+        : concluidas / tarefasMembro;
 
     _sheet(
       child: Column(
@@ -1279,10 +1256,7 @@ class _EasyCrewState extends State<EasyCrew> {
               child: Icon(icone, color: cor, size: 16),
             ),
             const SizedBox(height: 10),
-            Text(
-              titulo,
-              style: TextStyle(color: c.textoFraco, fontSize: 9),
-            ),
+            Text(titulo, style: TextStyle(color: c.textoFraco, fontSize: 9)),
             const SizedBox(height: 4),
             Text(
               valor,
@@ -1532,7 +1506,6 @@ class _EasyCrewState extends State<EasyCrew> {
     );
   }
 
-  /// Versão da tarefa que atualiza o sheet e a tela ao mesmo tempo.
   Widget _cardTarefaSheet(Map<String, dynamic> tarefa, StateSetter setSheet) {
     final bool concluida = tarefa['concluida'] == true;
     final String prioridade = tarefa['prioridade'].toString();
@@ -1582,8 +1555,9 @@ class _EasyCrewState extends State<EasyCrew> {
                         color: concluida ? c.textoSuave : c.texto,
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
-                        decoration:
-                            concluida ? TextDecoration.lineThrough : null,
+                        decoration: concluida
+                            ? TextDecoration.lineThrough
+                            : null,
                         decorationColor: c.textoSuave,
                       ),
                     ),
@@ -1596,10 +1570,7 @@ class _EasyCrewState extends State<EasyCrew> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 5,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                 decoration: BoxDecoration(
                   color: corClara(corPrioridade, 26),
                   borderRadius: BorderRadius.circular(8),
@@ -1738,8 +1709,11 @@ class _EasyCrewState extends State<EasyCrew> {
   // Utilidades
   // ---------------------------------------------------------------
   String _iniciais(String nome) {
-    final partes =
-        nome.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+    final partes = nome
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((p) => p.isNotEmpty)
+        .toList();
 
     if (partes.isEmpty) return '?';
 

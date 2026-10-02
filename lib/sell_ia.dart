@@ -54,25 +54,36 @@ class _SellIAState extends State<SellIA> {
         child: SafeArea(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(19, 15, 19, 0),
-                child: _cabecalho(),
-              ),
+              
               Expanded(
                 child: ListView(
                   controller: scrollController,
                   physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.fromLTRB(19, 22, 19, 16),
+                  padding: const EdgeInsets.fromLTRB(19, 15, 19, 16),
                   children: [
+                    
+                    _cabecalho(),
+
+                    const SizedBox(height: 22),
+
+                    
                     _cardApresentacao(),
+
                     const SizedBox(height: 20),
+
+                    
                     ...mensagens.map(_mensagem),
+
+                    
                     if (pensando) _indicadorPensando(),
+
                     const SizedBox(height: 6),
                   ],
                 ),
               ),
+
               _sugestoes(),
+
               _campoMensagem(),
             ],
           ),
@@ -174,11 +185,7 @@ class _SellIAState extends State<SellIA> {
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: c.bordaMedia),
             ),
-            child: Icon(
-              Icons.delete_outline_rounded,
-              color: c.texto,
-              size: 20,
-            ),
+            child: Icon(Icons.delete_outline_rounded, color: c.texto, size: 20),
           ),
         ),
       ],
@@ -237,29 +244,15 @@ class _SellIAState extends State<SellIA> {
           const SizedBox(height: 14),
           Text(
             'Pergunte sobre suas vendas, produtos ou estoque. A Sell IA analisa as informações do seu sistema e ajuda você a tomar decisões.',
-            style: TextStyle(
-              color: c.textoSuave,
-              fontSize: 12,
-              height: 1.5,
-            ),
+            style: TextStyle(color: c.textoSuave, fontSize: 12, height: 1.5),
           ),
           const SizedBox(height: 18),
           Container(height: 1, color: c.bordaSutil),
           const SizedBox(height: 16),
           Row(
             children: [
-              _miniInfo(
-                Icons.trending_up_rounded,
-                'Vendas',
-                '+12%',
-                c.verde,
-              ),
-              _miniInfo(
-                Icons.inventory_2_outlined,
-                'Produtos',
-                '246',
-                c.azul,
-              ),
+              _miniInfo(Icons.trending_up_rounded, 'Vendas', '+12%', c.verde),
+              _miniInfo(Icons.inventory_2_outlined, 'Produtos', '246', c.azul),
               _miniInfo(
                 Icons.warning_amber_rounded,
                 'Alertas',
@@ -425,10 +418,7 @@ class _SellIAState extends State<SellIA> {
         'texto': 'Tenho produtos com estoque baixo?',
         'icone': Icons.inventory_2_outlined,
       },
-      {
-        'texto': 'Analise meu faturamento',
-        'icone': Icons.analytics_outlined,
-      },
+      {'texto': 'Analise meu faturamento', 'icone': Icons.analytics_outlined},
     ];
 
     return SizedBox(
@@ -571,7 +561,9 @@ class _SellIAState extends State<SellIA> {
       return 'Para analisar preços, compare o valor atual do produto com seu custo, margem desejada e volume de vendas. Produtos com alta procura podem ter uma estratégia de preço diferente dos produtos com baixa saída.';
     }
 
-    if (texto.contains('olá') || texto.contains('oi') || texto.contains('ola')) {
+    if (texto.contains('olá') ||
+        texto.contains('oi') ||
+        texto.contains('ola')) {
       return 'Olá! 👋\n\nEstou pronta para ajudar você a analisar o seu negócio. Você pode perguntar sobre vendas, estoque, produtos ou faturamento.';
     }
 

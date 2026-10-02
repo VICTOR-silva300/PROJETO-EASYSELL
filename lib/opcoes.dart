@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'tema.dart';
+import 'login_page.dart';
+import 'sobre.dart';
+import 'ajuda_suporte.dart';
 
 class Opcoes extends StatefulWidget {
   const Opcoes({super.key});
@@ -24,7 +27,9 @@ class _OpcoesState extends State<Opcoes> {
     return Scaffold(
       backgroundColor: c.fundo,
       body: Container(
-        decoration: BoxDecoration(gradient: c.gradFundo),
+        decoration: BoxDecoration(
+          gradient: c.gradFundo,
+        ),
         child: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -33,16 +38,24 @@ class _OpcoesState extends State<Opcoes> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _cabecalho(),
+
                 const SizedBox(height: 24),
+
                 _perfil(),
+
                 const SizedBox(height: 28),
 
-                // ================= PREFERÊNCIAS =================
+                // =================================================
+                // PREFERÊNCIAS
+                // =================================================
+
                 _titulo(
                   'Preferências',
                   'Personalize a sua experiência',
                 ),
+
                 const SizedBox(height: 13),
+
                 _opcaoSwitch(
                   icone: Icons.notifications_none_rounded,
                   titulo: 'Notificações',
@@ -50,9 +63,12 @@ class _OpcoesState extends State<Opcoes> {
                   cor: c.amarelo,
                   valor: notificacoes,
                   aoAlterar: (valor) {
-                    setState(() => notificacoes = valor);
+                    setState(() {
+                      notificacoes = valor;
+                    });
                   },
                 ),
+
                 _opcaoSwitch(
                   icone: Icons.volume_up_outlined,
                   titulo: 'Sons',
@@ -60,9 +76,12 @@ class _OpcoesState extends State<Opcoes> {
                   cor: c.azul,
                   valor: sons,
                   aoAlterar: (valor) {
-                    setState(() => sons = valor);
+                    setState(() {
+                      sons = valor;
+                    });
                   },
                 ),
+
                 _opcaoSwitch(
                   icone: AppTema.escuro
                       ? Icons.dark_mode_outlined
@@ -74,20 +93,26 @@ class _OpcoesState extends State<Opcoes> {
                   cor: c.roxoClaro,
                   valor: AppTema.escuro,
                   aoAlterar: (valor) {
-                    // Muda o tema do app inteiro.
                     AppTema.definirEscuro(valor);
+
                     setState(() {});
                   },
                 ),
 
                 const SizedBox(height: 18),
 
-                // ================= APLICATIVO =================
+                // =================================================
+                // APLICATIVO
+                // =================================================
+
                 _titulo(
                   'Aplicativo',
                   'Idioma, ajuda e informações',
                 ),
+
                 const SizedBox(height: 13),
+
+                // IDIOMA
                 _opcao(
                   icone: Icons.language_rounded,
                   titulo: 'Idioma',
@@ -95,31 +120,52 @@ class _OpcoesState extends State<Opcoes> {
                   cor: c.azul,
                   aoClicar: _mostrarIdiomas,
                 ),
+
+                // AJUDA E SUPORTE
                 _opcao(
                   icone: Icons.help_outline_rounded,
                   titulo: 'Ajuda e suporte',
                   descricao: 'Encontre respostas e entre em contato',
                   cor: c.verde,
-                  aoClicar: () => _mensagem('Abrindo ajuda e suporte...'),
+                  aoClicar: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AjudaSuporte(),
+                      ),
+                    );
+                  },
                 ),
+
+                // SOBRE
                 _opcao(
                   icone: Icons.info_outline_rounded,
                   titulo: 'Sobre',
                   descricao: 'Informações sobre o EasySell',
                   cor: c.textoSuave,
                   aoClicar: () {
-                    Navigator.pushNamed(context, '/sobre');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Sobre(),
+                      ),
+                    );
                   },
                 ),
 
                 const SizedBox(height: 18),
 
-                // ================= SESSÃO =================
+                // =================================================
+                // SESSÃO
+                // =================================================
+
                 _titulo(
                   'Sessão',
                   'Encerre o acesso a esta conta',
                 ),
+
                 const SizedBox(height: 13),
+
                 _sair(),
 
                 const SizedBox(height: 28),
@@ -141,9 +187,9 @@ class _OpcoesState extends State<Opcoes> {
     );
   }
 
-  // ============================================================
+  // =============================================================
   // CABEÇALHO
-  // ============================================================
+  // =============================================================
 
   Widget _cabecalho() {
     final c = this.c;
@@ -156,11 +202,11 @@ class _OpcoesState extends State<Opcoes> {
           decoration: BoxDecoration(
             gradient: AppCores.gradRoxo,
             borderRadius: BorderRadius.circular(16),
-            boxShadow: const [
+            boxShadow: [
               BoxShadow(
-                color: Color(0x427C3AED),
+                color: c.roxo.withAlpha(65),
                 blurRadius: 22,
-                offset: Offset(0, 8),
+                offset: const Offset(0, 8),
               ),
             ],
           ),
@@ -170,7 +216,9 @@ class _OpcoesState extends State<Opcoes> {
             size: 24,
           ),
         ),
+
         const SizedBox(width: 12),
+
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,7 +232,9 @@ class _OpcoesState extends State<Opcoes> {
                   letterSpacing: 1.4,
                 ),
               ),
+
               const SizedBox(height: 4),
+
               Text(
                 'Opções',
                 style: TextStyle(
@@ -200,9 +250,9 @@ class _OpcoesState extends State<Opcoes> {
     );
   }
 
-  // ============================================================
+  // =============================================================
   // PERFIL
-  // ============================================================
+  // =============================================================
 
   Widget _perfil() {
     final c = this.c;
@@ -213,12 +263,14 @@ class _OpcoesState extends State<Opcoes> {
       decoration: BoxDecoration(
         gradient: c.gradDestaque,
         borderRadius: BorderRadius.circular(27),
-        border: Border.all(color: const Color(0x3A7C3AED)),
-        boxShadow: const [
+        border: Border.all(
+          color: c.roxo.withAlpha(58),
+        ),
+        boxShadow: [
           BoxShadow(
-            color: Color(0x257C3AED),
+            color: c.roxo.withAlpha(37),
             blurRadius: 30,
-            offset: Offset(0, 13),
+            offset: const Offset(0, 13),
           ),
         ],
       ),
@@ -242,7 +294,9 @@ class _OpcoesState extends State<Opcoes> {
               ),
             ),
           ),
+
           const SizedBox(width: 15),
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -255,7 +309,9 @@ class _OpcoesState extends State<Opcoes> {
                     fontWeight: FontWeight.w900,
                   ),
                 ),
+
                 const SizedBox(height: 4),
+
                 Text(
                   'admin@email.com',
                   style: TextStyle(
@@ -263,20 +319,27 @@ class _OpcoesState extends State<Opcoes> {
                     fontSize: 12,
                   ),
                 ),
+
                 const SizedBox(height: 9),
+
                 const _StatusConta(),
               ],
             ),
           ),
+
           GestureDetector(
-            onTap: () => _mensagem('Abrindo perfil...'),
+            onTap: () {
+              _mensagem('Abrindo perfil...');
+            },
             child: Container(
               width: 43,
               height: 43,
               decoration: BoxDecoration(
                 color: c.superficie,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: c.bordaMedia),
+                border: Border.all(
+                  color: c.bordaMedia,
+                ),
               ),
               child: Icon(
                 Icons.edit_outlined,
@@ -290,11 +353,14 @@ class _OpcoesState extends State<Opcoes> {
     );
   }
 
-  // ============================================================
+  // =============================================================
   // TÍTULO
-  // ============================================================
+  // =============================================================
 
-  Widget _titulo(String titulo, String subtitulo) {
+  Widget _titulo(
+    String titulo,
+    String subtitulo,
+  ) {
     final c = this.c;
 
     return Row(
@@ -304,11 +370,18 @@ class _OpcoesState extends State<Opcoes> {
           width: 4,
           height: 34,
           decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [c.roxoClaro, c.roxo]),
+            gradient: LinearGradient(
+              colors: [
+                c.roxoClaro,
+                c.roxo,
+              ],
+            ),
             borderRadius: BorderRadius.circular(10),
           ),
         ),
+
         const SizedBox(width: 10),
+
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -321,7 +394,9 @@ class _OpcoesState extends State<Opcoes> {
                   fontWeight: FontWeight.w900,
                 ),
               ),
+
               const SizedBox(height: 4),
+
               Text(
                 subtitulo,
                 style: TextStyle(
@@ -332,6 +407,7 @@ class _OpcoesState extends State<Opcoes> {
             ],
           ),
         ),
+
         Container(
           width: 7,
           height: 7,
@@ -344,24 +420,40 @@ class _OpcoesState extends State<Opcoes> {
     );
   }
 
-  // ============================================================
-  // BLOCOS REUTILIZÁVEIS
-  // ============================================================
+  // =============================================================
+  // ÍCONE
+  // =============================================================
 
-  Widget _iconeCaixa(IconData icone, Color cor) {
+  Widget _iconeCaixa(
+    IconData icone,
+    Color cor,
+  ) {
     return Container(
       width: 46,
       height: 46,
       decoration: BoxDecoration(
         color: tom(cor, 30),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: tom(cor, 38)),
+        border: Border.all(
+          color: tom(cor, 38),
+        ),
       ),
-      child: Icon(icone, color: cor, size: 20),
+      child: Icon(
+        icone,
+        color: cor,
+        size: 20,
+      ),
     );
   }
 
-  Widget _textos(String titulo, String descricao) {
+  // =============================================================
+  // TEXTOS
+  // =============================================================
+
+  Widget _textos(
+    String titulo,
+    String descricao,
+  ) {
     final c = this.c;
 
     return Expanded(
@@ -376,7 +468,9 @@ class _OpcoesState extends State<Opcoes> {
               fontWeight: FontWeight.w800,
             ),
           ),
+
           const SizedBox(height: 4),
+
           Text(
             descricao,
             style: TextStyle(
@@ -389,19 +483,25 @@ class _OpcoesState extends State<Opcoes> {
     );
   }
 
+  // =============================================================
+  // DECORAÇÃO DOS CARDS
+  // =============================================================
+
   BoxDecoration _decoracaoCard() {
     final c = this.c;
 
     return BoxDecoration(
       gradient: c.gradCard,
       borderRadius: BorderRadius.circular(21),
-      border: Border.all(color: c.bordaSutil),
+      border: Border.all(
+        color: c.bordaSutil,
+      ),
     );
   }
 
-  // ============================================================
+  // =============================================================
   // OPÇÃO NORMAL
-  // ============================================================
+  // =============================================================
 
   Widget _opcao({
     required IconData icone,
@@ -424,9 +524,18 @@ class _OpcoesState extends State<Opcoes> {
             padding: const EdgeInsets.all(14),
             child: Row(
               children: [
-                _iconeCaixa(icone, cor),
+                _iconeCaixa(
+                  icone,
+                  cor,
+                ),
+
                 const SizedBox(width: 14),
-                _textos(titulo, descricao),
+
+                _textos(
+                  titulo,
+                  descricao,
+                ),
+
                 Icon(
                   Icons.arrow_forward_ios_rounded,
                   color: c.textoFraco,
@@ -440,9 +549,9 @@ class _OpcoesState extends State<Opcoes> {
     );
   }
 
-  // ============================================================
+  // =============================================================
   // OPÇÃO COM SWITCH
-  // ============================================================
+  // =============================================================
 
   Widget _opcaoSwitch({
     required IconData icone,
@@ -456,36 +565,55 @@ class _OpcoesState extends State<Opcoes> {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 14,
+        vertical: 10,
+      ),
       decoration: _decoracaoCard(),
       child: Row(
         children: [
-          _iconeCaixa(icone, cor),
+          _iconeCaixa(
+            icone,
+            cor,
+          ),
+
           const SizedBox(width: 14),
-          _textos(titulo, descricao),
+
+          _textos(
+            titulo,
+            descricao,
+          ),
+
           Switch(
             value: valor,
             onChanged: aoAlterar,
             thumbColor: WidgetStateProperty.resolveWith(
-              (estados) => estados.contains(WidgetState.selected)
-                  ? Colors.white
-                  : c.textoSuave,
+              (estados) {
+                return estados.contains(WidgetState.selected)
+                    ? Colors.white
+                    : c.textoSuave;
+              },
             ),
             trackColor: WidgetStateProperty.resolveWith(
-              (estados) => estados.contains(WidgetState.selected)
-                  ? c.roxo
-                  : c.trilhaInativa,
+              (estados) {
+                return estados.contains(WidgetState.selected)
+                    ? c.roxo
+                    : c.trilhaInativa;
+              },
             ),
-            trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
+            trackOutlineColor:
+                WidgetStateProperty.all(
+              Colors.transparent,
+            ),
           ),
         ],
       ),
     );
   }
 
-  // ============================================================
-  // SAIR
-  // ============================================================
+  // =============================================================
+  // SAIR DA CONTA
+  // =============================================================
 
   Widget _sair() {
     final c = this.c;
@@ -502,7 +630,9 @@ class _OpcoesState extends State<Opcoes> {
           ],
         ),
         borderRadius: BorderRadius.circular(21),
-        border: Border.all(color: tom(c.vermelho, 56)),
+        border: Border.all(
+          color: tom(c.vermelho, 56),
+        ),
       ),
       child: Material(
         color: Colors.transparent,
@@ -519,7 +649,9 @@ class _OpcoesState extends State<Opcoes> {
                   decoration: BoxDecoration(
                     color: tom(c.vermelho, 32),
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: tom(c.vermelho, 42)),
+                    border: Border.all(
+                      color: tom(c.vermelho, 42),
+                    ),
                   ),
                   child: Icon(
                     Icons.logout_rounded,
@@ -527,10 +659,13 @@ class _OpcoesState extends State<Opcoes> {
                     size: 20,
                   ),
                 ),
+
                 const SizedBox(width: 14),
+
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Sair da conta',
@@ -540,7 +675,9 @@ class _OpcoesState extends State<Opcoes> {
                           fontWeight: FontWeight.w800,
                         ),
                       ),
+
                       const SizedBox(height: 4),
+
                       Text(
                         'Encerrar a sessão neste dispositivo',
                         style: TextStyle(
@@ -551,6 +688,7 @@ class _OpcoesState extends State<Opcoes> {
                     ],
                   ),
                 ),
+
                 Icon(
                   Icons.arrow_forward_ios_rounded,
                   color: c.vermelho,
@@ -564,9 +702,9 @@ class _OpcoesState extends State<Opcoes> {
     );
   }
 
-  // ============================================================
+  // =============================================================
   // IDIOMAS
-  // ============================================================
+  // =============================================================
 
   void _mostrarIdiomas() {
     final c = this.c;
@@ -587,10 +725,16 @@ class _OpcoesState extends State<Opcoes> {
           child: SafeArea(
             top: false,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(22, 12, 22, 28),
+              padding: const EdgeInsets.fromLTRB(
+                22,
+                12,
+                22,
+                28,
+              ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
                 children: [
                   Center(
                     child: Container(
@@ -598,11 +742,14 @@ class _OpcoesState extends State<Opcoes> {
                       height: 4,
                       decoration: BoxDecoration(
                         color: c.textoFraco,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius:
+                            BorderRadius.circular(20),
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 24),
+
                   Text(
                     'Idioma',
                     style: TextStyle(
@@ -611,7 +758,9 @@ class _OpcoesState extends State<Opcoes> {
                       fontWeight: FontWeight.w900,
                     ),
                   ),
+
                   const SizedBox(height: 5),
+
                   Text(
                     'Escolha o idioma do aplicativo',
                     style: TextStyle(
@@ -619,10 +768,23 @@ class _OpcoesState extends State<Opcoes> {
                       fontSize: 11,
                     ),
                   ),
+
                   const SizedBox(height: 21),
-                  _idioma('Português (Brasil)', true),
-                  _idioma('English', false),
-                  _idioma('Español', false),
+
+                  _idioma(
+                    'Português (Brasil)',
+                    true,
+                  ),
+
+                  _idioma(
+                    'English',
+                    false,
+                  ),
+
+                  _idioma(
+                    'Español',
+                    false,
+                  ),
                 ],
               ),
             ),
@@ -632,7 +794,10 @@ class _OpcoesState extends State<Opcoes> {
     );
   }
 
-  Widget _idioma(String nome, bool selecionado) {
+  Widget _idioma(
+    String nome,
+    bool selecionado,
+  ) {
     final c = this.c;
 
     return Padding(
@@ -643,7 +808,10 @@ class _OpcoesState extends State<Opcoes> {
           borderRadius: BorderRadius.circular(19),
           onTap: () {
             Navigator.pop(context);
-            _mensagem('$nome selecionado');
+
+            _mensagem(
+              '$nome selecionado',
+            );
           },
           child: Container(
             padding: const EdgeInsets.all(15),
@@ -651,8 +819,9 @@ class _OpcoesState extends State<Opcoes> {
               color: c.fundo2,
               borderRadius: BorderRadius.circular(19),
               border: Border.all(
-                color:
-                    selecionado ? const Color(0x557C3AED) : c.bordaSutil,
+                color: selecionado
+                    ? c.roxo.withAlpha(85)
+                    : c.bordaSutil,
               ),
             ),
             child: Row(
@@ -663,11 +832,13 @@ class _OpcoesState extends State<Opcoes> {
                     style: TextStyle(
                       color: c.texto,
                       fontSize: 14,
-                      fontWeight:
-                          selecionado ? FontWeight.w800 : FontWeight.w500,
+                      fontWeight: selecionado
+                          ? FontWeight.w800
+                          : FontWeight.w500,
                     ),
                   ),
                 ),
+
                 if (selecionado)
                   Icon(
                     Icons.check_circle_rounded,
@@ -682,9 +853,9 @@ class _OpcoesState extends State<Opcoes> {
     );
   }
 
-  // ============================================================
+  // =============================================================
   // CONFIRMAR SAÍDA
-  // ============================================================
+  // =============================================================
 
   void _confirmarSaida() {
     final c = this.c;
@@ -694,13 +865,16 @@ class _OpcoesState extends State<Opcoes> {
       builder: (dialogContext) {
         return Dialog(
           backgroundColor: Colors.transparent,
-          insetPadding: const EdgeInsets.symmetric(horizontal: 26),
+          insetPadding:
+              const EdgeInsets.symmetric(horizontal: 26),
           child: Container(
             padding: const EdgeInsets.all(22),
             decoration: BoxDecoration(
               gradient: c.gradSheet,
               borderRadius: BorderRadius.circular(27),
-              border: Border.all(color: c.bordaMedia),
+              border: Border.all(
+                color: c.bordaMedia,
+              ),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -710,8 +884,11 @@ class _OpcoesState extends State<Opcoes> {
                   height: 58,
                   decoration: BoxDecoration(
                     color: tom(c.vermelho, 32),
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: tom(c.vermelho, 42)),
+                    borderRadius:
+                        BorderRadius.circular(18),
+                    border: Border.all(
+                      color: tom(c.vermelho, 42),
+                    ),
                   ),
                   child: Icon(
                     Icons.logout_rounded,
@@ -719,7 +896,9 @@ class _OpcoesState extends State<Opcoes> {
                     size: 26,
                   ),
                 ),
+
                 const SizedBox(height: 16),
+
                 Text(
                   'Sair da conta?',
                   style: TextStyle(
@@ -728,7 +907,9 @@ class _OpcoesState extends State<Opcoes> {
                     fontWeight: FontWeight.w900,
                   ),
                 ),
+
                 const SizedBox(height: 8),
+
                 Text(
                   'Você precisará entrar novamente para acessar sua conta.',
                   textAlign: TextAlign.center,
@@ -738,45 +919,78 @@ class _OpcoesState extends State<Opcoes> {
                     height: 1.5,
                   ),
                 ),
+
                 const SizedBox(height: 22),
+
                 Row(
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () => Navigator.pop(dialogContext),
+                        onPressed: () {
+                          Navigator.pop(dialogContext);
+                        },
                         style: OutlinedButton.styleFrom(
                           foregroundColor: c.textoSuave,
-                          side: BorderSide(color: c.bordaMedia),
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
+                          side: BorderSide(
+                            color: c.bordaMedia,
+                          ),
+                          padding:
+                              const EdgeInsets.symmetric(
+                            vertical: 15,
+                          ),
+                          shape:
+                              RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(15),
                           ),
                         ),
                         child: const Text(
                           'Cancelar',
-                          style: TextStyle(fontWeight: FontWeight.w700),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(width: 10),
+
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
+                          // Fecha o diálogo.
                           Navigator.pop(dialogContext);
-                          _mensagem('Saindo da conta...');
+
+                          // Vai para o LoginPage e remove
+                          // todas as telas anteriores.
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const LoginPage(),
+                            ),
+                            (route) => false,
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: c.vermelho,
                           foregroundColor: Colors.white,
                           elevation: 0,
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
+                          padding:
+                              const EdgeInsets.symmetric(
+                            vertical: 15,
+                          ),
+                          shape:
+                              RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(15),
                           ),
                         ),
                         child: const Text(
                           'Sair',
-                          style: TextStyle(fontWeight: FontWeight.w800),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
                       ),
                     ),
@@ -790,9 +1004,9 @@ class _OpcoesState extends State<Opcoes> {
     );
   }
 
-  // ============================================================
+  // =============================================================
   // MENSAGEM
-  // ============================================================
+  // =============================================================
 
   void _mensagem(String texto) {
     ScaffoldMessenger.of(context)
@@ -809,19 +1023,22 @@ class _OpcoesState extends State<Opcoes> {
           ),
           backgroundColor: const Color(0xFF181F31),
           behavior: SnackBarBehavior.floating,
-          duration: const Duration(milliseconds: 1400),
+          duration:
+              const Duration(milliseconds: 1400),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
-            side: const BorderSide(color: Color(0x18FFFFFF)),
+            side: const BorderSide(
+              color: Color(0x18FFFFFF),
+            ),
           ),
         ),
       );
   }
 }
 
-// ============================================================
+// ===============================================================
 // STATUS DA CONTA
-// ============================================================
+// ===============================================================
 
 class _StatusConta extends StatelessWidget {
   const _StatusConta();
@@ -831,17 +1048,28 @@ class _StatusConta extends StatelessWidget {
     final c = context.cores;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 9,
+        vertical: 5,
+      ),
       decoration: BoxDecoration(
         color: c.verde.withAlpha(24),
         borderRadius: BorderRadius.circular(9),
-        border: Border.all(color: c.verde.withAlpha(38)),
+        border: Border.all(
+          color: c.verde.withAlpha(38),
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.circle, color: c.verde, size: 6),
+          Icon(
+            Icons.circle,
+            color: c.verde,
+            size: 6,
+          ),
+
           const SizedBox(width: 5),
+
           Text(
             'Conta ativa',
             style: TextStyle(
@@ -855,3 +1083,4 @@ class _StatusConta extends StatelessWidget {
     );
   }
 }
+

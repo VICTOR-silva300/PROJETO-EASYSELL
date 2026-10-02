@@ -83,8 +83,8 @@ class _VendasState extends State<Vendas> {
 
       final busca = cliente.contains(pesquisa) || pedido.contains(pesquisa);
 
-      final filtro = filtroSelecionado == 'Todas' ||
-          venda['status'] == filtroSelecionado;
+      final filtro =
+          filtroSelecionado == 'Todas' || venda['status'] == filtroSelecionado;
 
       return busca && filtro;
     }).toList();
@@ -178,45 +178,44 @@ class _VendasState extends State<Vendas> {
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(19, 15, 19, 100),
                 sliver: SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      _cabecalho(),
-                      const SizedBox(height: 27),
-                      _saudacao(),
-                      const SizedBox(height: 21),
-                      _cardFaturamento(),
-                      const SizedBox(height: 22),
-                      _indicadores(),
-                      const SizedBox(height: 29),
-                      _titulo(
-                        'Desempenho',
-                        'Acompanhe suas vendas durante a semana',
-                      ),
-                      const SizedBox(height: 13),
-                      _grafico(),
-                      const SizedBox(height: 29),
-                      _titulo(
-                        'Vendas recentes',
-                        'Pedidos e movimentações realizadas',
-                        extra: '${lista.length} '
-                            '${lista.length == 1 ? 'registro' : 'registros'}',
-                      ),
-                      const SizedBox(height: 15),
-                      _barraPesquisa(),
-                      const SizedBox(height: 14),
-                      _filtros(),
-                      const SizedBox(height: 16),
-                      if (lista.isEmpty)
-                        _vazio()
-                      else
-                        ...lista.map(
-                          (venda) => Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: _cardVenda(venda),
-                          ),
+                  delegate: SliverChildListDelegate([
+                    _cabecalho(),
+                    const SizedBox(height: 27),
+                    _saudacao(),
+                    const SizedBox(height: 21),
+                    _cardFaturamento(),
+                    const SizedBox(height: 22),
+                    _indicadores(),
+                    const SizedBox(height: 29),
+                    _titulo(
+                      'Desempenho',
+                      'Acompanhe suas vendas durante a semana',
+                    ),
+                    const SizedBox(height: 13),
+                    _grafico(),
+                    const SizedBox(height: 29),
+                    _titulo(
+                      'Vendas recentes',
+                      'Pedidos e movimentações realizadas',
+                      extra:
+                          '${lista.length} '
+                          '${lista.length == 1 ? 'registro' : 'registros'}',
+                    ),
+                    const SizedBox(height: 15),
+                    _barraPesquisa(),
+                    const SizedBox(height: 14),
+                    _filtros(),
+                    const SizedBox(height: 16),
+                    if (lista.isEmpty)
+                      _vazio()
+                    else
+                      ...lista.map(
+                        (venda) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: _cardVenda(venda),
                         ),
-                    ],
-                  ),
+                      ),
+                  ]),
                 ),
               ),
             ],
@@ -351,10 +350,7 @@ class _VendasState extends State<Vendas> {
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 9,
-                vertical: 6,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
               decoration: BoxDecoration(
                 color: corClara(corBadge, 24),
                 borderRadius: BorderRadius.circular(9),
@@ -367,7 +363,7 @@ class _VendasState extends State<Vendas> {
                   Text(
                     pendencias
                         ? '$vendasPendentes '
-                            '${vendasPendentes == 1 ? 'pendente' : 'pendentes'}'
+                              '${vendasPendentes == 1 ? 'pendente' : 'pendentes'}'
                         : 'Tudo em dia',
                     style: TextStyle(
                       color: corBadge,
@@ -426,10 +422,7 @@ class _VendasState extends State<Vendas> {
                 height: 44,
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFF8B5CF6),
-                      Color(0xFF5B21B6),
-                    ],
+                    colors: [Color(0xFF8B5CF6), Color(0xFF5B21B6)],
                   ),
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -520,9 +513,7 @@ class _VendasState extends State<Vendas> {
                     widthFactor: (taxaConclusao / 100).clamp(0.0, 1.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [c.roxo, c.roxoClaro],
-                        ),
+                        gradient: LinearGradient(colors: [c.roxo, c.roxoClaro]),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
@@ -570,12 +561,7 @@ class _VendasState extends State<Vendas> {
     );
   }
 
-  Widget _infoDestaque(
-    String titulo,
-    String valor,
-    Color cor,
-    IconData icon,
-  ) {
+  Widget _infoDestaque(String titulo, String valor, Color cor, IconData icon) {
     return Expanded(
       child: Row(
         children: [
@@ -871,11 +857,7 @@ class _VendasState extends State<Vendas> {
           hintText: 'Buscar venda, cliente ou pedido...',
           hintStyle: TextStyle(color: c.textoFraco, fontSize: 12),
           contentPadding: const EdgeInsets.symmetric(vertical: 15),
-          prefixIcon: Icon(
-            Icons.search_rounded,
-            color: c.textoFraco,
-            size: 20,
-          ),
+          prefixIcon: Icon(Icons.search_rounded, color: c.textoFraco, size: 20),
           suffixIcon: pesquisaController.text.isNotEmpty
               ? IconButton(
                   onPressed: () {
@@ -897,30 +879,22 @@ class _VendasState extends State<Vendas> {
   Widget _filtros() {
     const opcoes = ['Todas', ...statusOpcoes];
 
-    return SizedBox(
-      height: 40,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: opcoes.length,
-        itemBuilder: (context, index) {
-          final item = opcoes[index];
-
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      child: Row(
+        children: opcoes.map((item) {
           return _chipSelecao(
             item,
             filtroSelecionado == item,
             () => setState(() => filtroSelecionado = item),
           );
-        },
+        }).toList(),
       ),
     );
   }
 
-  Widget _chipSelecao(
-    String label,
-    bool selecionado,
-    VoidCallback onTap,
-  ) {
+  Widget _chipSelecao(String label, bool selecionado, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -931,18 +905,13 @@ class _VendasState extends State<Vendas> {
         decoration: BoxDecoration(
           gradient: selecionado
               ? const LinearGradient(
-                  colors: [
-                    Color(0x327C3AED),
-                    Color(0x187C3AED),
-                  ],
+                  colors: [Color(0x327C3AED), Color(0x187C3AED)],
                 )
               : null,
           color: selecionado ? null : c.superficie,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: selecionado
-                ? const Color(0x357C3AED)
-                : c.bordaSutil,
+            color: selecionado ? const Color(0x357C3AED) : c.bordaSutil,
           ),
         ),
         child: Text(
@@ -1013,10 +982,7 @@ class _VendasState extends State<Vendas> {
                       '${venda['pedido']} • ${venda['horario']}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: c.textoFraco,
-                        fontSize: 10,
-                      ),
+                      style: TextStyle(color: c.textoFraco, fontSize: 10),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -1098,11 +1064,7 @@ class _VendasState extends State<Vendas> {
               color: corClara(c.roxoClaro, 27),
               borderRadius: BorderRadius.circular(18),
             ),
-            child: Icon(
-              Icons.search_off_rounded,
-              color: c.roxoClaro,
-              size: 28,
-            ),
+            child: Icon(Icons.search_off_rounded, color: c.roxoClaro, size: 28),
           ),
           const SizedBox(height: 15),
           Text(
@@ -1261,10 +1223,7 @@ class _VendasState extends State<Vendas> {
   // ---------------------------------------------------------------
   // Bottom sheet padrão (mesmo estilo da Home)
   // ---------------------------------------------------------------
-  Future<void> _sheet({
-    required Widget child,
-    double alturaMaxima = 0.86,
-  }) {
+  Future<void> _sheet({required Widget child, double alturaMaxima = 0.86}) {
     return showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1324,10 +1283,7 @@ class _VendasState extends State<Vendas> {
             ),
           ),
           const SizedBox(height: 5),
-          Text(
-            subtitulo,
-            style: TextStyle(color: c.textoSuave, fontSize: 11),
-          ),
+          Text(subtitulo, style: TextStyle(color: c.textoSuave, fontSize: 11)),
         ],
       ),
     );
@@ -1537,12 +1493,7 @@ class _VendasState extends State<Vendas> {
                 c.azul,
               ),
               const SizedBox(width: 10),
-              _detalhe(
-                'Status',
-                status,
-                _iconeStatus(status),
-                corStatus,
-              ),
+              _detalhe('Status', status, _iconeStatus(status), corStatus),
             ],
           ),
           const SizedBox(height: 22),
@@ -1570,12 +1521,7 @@ class _VendasState extends State<Vendas> {
     );
   }
 
-  Widget _detalhe(
-    String titulo,
-    String valor,
-    IconData icon,
-    Color cor,
-  ) {
+  Widget _detalhe(String titulo, String valor, IconData icon, Color cor) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(13),
@@ -1597,10 +1543,7 @@ class _VendasState extends State<Vendas> {
               child: Icon(icon, color: cor, size: 16),
             ),
             const SizedBox(height: 10),
-            Text(
-              titulo,
-              style: TextStyle(color: c.textoFraco, fontSize: 9),
-            ),
+            Text(titulo, style: TextStyle(color: c.textoFraco, fontSize: 9)),
             const SizedBox(height: 4),
             Text(
               valor,
@@ -1646,10 +1589,7 @@ class _VendasState extends State<Vendas> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _tituloSheet(
-                'Nova venda',
-                'Registre uma nova venda no EasySell',
-              ),
+              _tituloSheet('Nova venda', 'Registre uma nova venda no EasySell'),
               const SizedBox(height: 21),
               _rotuloCampo('Cliente'),
               const SizedBox(height: 8),
@@ -1810,7 +1750,6 @@ class _VendasState extends State<Vendas> {
     return maior + 1;
   }
 
-  /// Aceita "189,90", "189.90" e "1.250,50".
   double? _lerValor(String texto) {
     var t = texto.trim().replaceAll('R\$', '').replaceAll(' ', '');
 
@@ -1822,8 +1761,11 @@ class _VendasState extends State<Vendas> {
   }
 
   String _iniciais(String nome) {
-    final partes =
-        nome.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+    final partes = nome
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((p) => p.isNotEmpty)
+        .toList();
 
     if (partes.isEmpty) return '?';
 
@@ -1835,7 +1777,6 @@ class _VendasState extends State<Vendas> {
     return '${partes.first[0]}${partes.last[0]}'.toUpperCase();
   }
 
-  /// 1250.5 -> "R$ 1.250,50"
   String _dinheiro(dynamic valor) {
     final numero = valor is num
         ? valor.toDouble()
@@ -1901,15 +1842,7 @@ class _GraficoVendasPainter extends CustomPainter {
 
   _GraficoVendasPainter(this.corGrade);
 
-  final List<double> pontos = const [
-    0.68,
-    0.48,
-    0.58,
-    0.32,
-    0.42,
-    0.20,
-    0.28,
-  ];
+  final List<double> pontos = const [0.68, 0.48, 0.58, 0.32, 0.42, 0.20, 0.28];
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -1946,10 +1879,7 @@ class _GraficoVendasPainter extends CustomPainter {
       ..shader = const LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [
-          Color(0x447C3AED),
-          Color(0x057C3AED),
-        ],
+        colors: [Color(0x447C3AED), Color(0x057C3AED)],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
 
     canvas.drawPath(preenchimento, area);

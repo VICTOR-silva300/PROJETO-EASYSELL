@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'tema.dart';
 
 class Sobre extends StatelessWidget {
-  const Sobre({super.key});
+  final VoidCallback? aoVoltar;
+
+  const Sobre({super.key, this.aoVoltar});
 
   @override
   Widget build(BuildContext context) {
     final c = context.cores;
+    // ... resto igual
 
     return Scaffold(
       backgroundColor: c.fundo,
@@ -20,7 +23,7 @@ class Sobre extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _cabecalho(c),
+                _cabecalho(context, c),
                 const SizedBox(height: 28),
 
                 // LOGO + NOME
@@ -48,11 +51,7 @@ class Sobre extends StatelessWidget {
                 const SizedBox(height: 30),
 
                 // SOBRE A EMPRESA
-                _titulo(
-                  c,
-                  'Sobre a EASYSELL',
-                  'Quem somos e o que fazemos',
-                ),
+                _titulo(c, 'Sobre a EASYSELL', 'Quem somos e o que fazemos'),
                 const SizedBox(height: 13),
                 Container(
                   width: double.infinity,
@@ -174,9 +173,27 @@ class Sobre extends StatelessWidget {
     );
   }
 
-  Widget _cabecalho(AppCores c) {
+  Widget _cabecalho(BuildContext context, AppCores c) {
     return Row(
       children: [
+        GestureDetector(
+          onTap: aoVoltar ?? () => Navigator.maybePop(context),
+          child: Container(
+            width: 43,
+            height: 43,
+            decoration: BoxDecoration(
+              color: c.superficie,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: c.bordaMedia),
+            ),
+            child: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: c.texto,
+              size: 18,
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
         Container(
           width: 50,
           height: 50,
@@ -263,10 +280,7 @@ class Sobre extends StatelessWidget {
         Container(
           width: 7,
           height: 7,
-          decoration: BoxDecoration(
-            color: c.roxoClaro,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: c.roxoClaro, shape: BoxShape.circle),
         ),
       ],
     );

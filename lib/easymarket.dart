@@ -147,7 +147,7 @@ class _EasyMarketState extends State<EasyMarket> {
 
   Color _clara(Color cor, int alpha) => cor.withAlpha(alpha);
 
-  /// 1250.5 -> "1.250,50"
+  
   String _preco(dynamic valor) {
     final partes = (valor as num).toStringAsFixed(2).split('.');
     final inteiro = partes[0].replaceAllMapped(

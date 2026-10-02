@@ -1893,7 +1893,7 @@ class _EquipeState extends State<Equipe> {
     return '${partes.first[0]}${partes.last[0]}'.toUpperCase();
   }
 
-  /// 5240.0 -> "5.240,00"
+  
   String _dinheiro(dynamic valor) {
     final partes = (valor as num).toStringAsFixed(2).split('.');
     final inteiro = partes[0].replaceAllMapped(
