@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
 
+import 'home.dart';
+import 'tema.dart'; // Mesmas cores usadas no login e na recuperação de senha
+
+// ============================================================
+// TELA DE CADASTRO
+// Layout em duas seções ("Seus dados" e "Segurança"), com
+// indicador de força da senha e navegação pelo teclado.
+// A lógica é a mesma de antes: valida campos vazios, confere
+// se as senhas são iguais e então abre a Home.
+// ============================================================
 class Cadastro extends StatefulWidget {
   const Cadastro({super.key});
 
@@ -9,13 +18,18 @@ class Cadastro extends StatefulWidget {
 }
 
 class _CadastroState extends State<Cadastro> {
+  // Controllers: guardam o que foi digitado em cada campo
   final nomeController = TextEditingController();
   final emailController = TextEditingController();
   final senhaController = TextEditingController();
   final confirmarSenhaController = TextEditingController();
 
+  // Controlam o "olhinho" de cada campo de senha
   bool mostrarSenha = false;
   bool mostrarConfirmarSenha = false;
+
+  // Atalho para as cores do tema
+  AppCores get c => context.cores;
 
   @override
   void dispose() {
@@ -26,85 +40,153 @@ class _CadastroState extends State<Cadastro> {
     super.dispose();
   }
 
+  // Mostra um aviso flutuante no mesmo estilo das outras telas
+  void _aviso(String mensagem) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(mensagem),
+        backgroundColor: c.fundo2,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
+
+  // Ação do botão "Criar minha conta"
   void cadastrar() {
     final nome = nomeController.text.trim();
     final email = emailController.text.trim();
     final senha = senhaController.text;
     final confirmarSenha = confirmarSenhaController.text;
 
+    // 1) Todos os campos precisam estar preenchidos
     if (nome.isEmpty ||
         email.isEmpty ||
         senha.isEmpty ||
         confirmarSenha.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Preencha todos os campos.'),
-        ),
-      );
+      _aviso('Preencha todos os campos.');
       return;
     }
 
+    // 2) As duas senhas precisam ser iguais
     if (senha != confirmarSenha) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('As senhas não são iguais.'),
-        ),
-      );
+      _aviso('As senhas não são iguais.');
       return;
     }
 
+    // 3) Tudo certo: abre a Home (sem permitir voltar ao cadastro)
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (context) => const Home(),
-      ),
+      MaterialPageRoute(builder: (context) => const Home()),
     );
   }
 
+  // Volta para a tela de login
   void voltarLogin() {
     Navigator.pop(context);
+  }
+
+  // Calcula a força da senha: 0 (vazia) a 4 (forte)
+  int get _forcaSenha {
+    final s = senhaController.text;
+    if (s.isEmpty) return 0;
+    int pontos = 0;
+    if (s.length >= 6) pontos++;
+    if (s.length >= 10) pontos++;
+    if (RegExp(r'[A-Z]').hasMatch(s) && RegExp(r'[a-z]').hasMatch(s)) pontos++;
+    if (RegExp(r'[0-9]').hasMatch(s) && RegExp(r'[^A-Za-z0-9]').hasMatch(s)) {
+      pontos++;
+    }
+    return pontos == 0 ? 1 : pontos;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F1422),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF252C43),
-              Color(0xFF171B2A),
-              Color(0xFF0F1422),
-            ],
-          ),
+      backgroundColor: c.fundo,
+      // Seta de voltar no topo, padrão de apps reais
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        foregroundColor: c.texto,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: voltarLogin,
         ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 30,
-              ),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 420,
-                ),
-                child: Column(
-                  children: [
-                    _logo(),
-                    const SizedBox(height: 40),
-                    _cadastroCard(),
-                    const SizedBox(height: 20),
-                    _botoes(),
-                    const SizedBox(height: 28),
-                    _rodape(),
-                  ],
-                ),
+      ),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(24, 4, 24, 32),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _cabecalho(),
+                  const SizedBox(height: 32),
+
+                  // ---------- Seção 1: dados pessoais ----------
+                  _secao('Seus dados'),
+                  const SizedBox(height: 14),
+                  _campo(
+                    rotulo: 'Nome',
+                    controller: nomeController,
+                    hint: 'Como você quer ser chamado',
+                    icon: Icons.person_outline_rounded,
+                    capitalizacao: TextCapitalization.words,
+                  ),
+                  const SizedBox(height: 16),
+                  _campo(
+                    rotulo: 'E-mail',
+                    controller: emailController,
+                    hint: 'voce@empresa.com',
+                    icon: Icons.email_outlined,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(height: 28),
+
+                  // ---------- Seção 2: senha ----------
+                  _secao('Segurança'),
+                  const SizedBox(height: 14),
+                  _campo(
+                    rotulo: 'Senha',
+                    controller: senhaController,
+                    hint: 'Crie uma senha',
+                    icon: Icons.lock_outline_rounded,
+                    obscureText: !mostrarSenha,
+                    // Atualiza a barra de força a cada letra digitada
+                    onChanged: (_) => setState(() {}),
+                    suffixIcon: _olhinho(
+                      visivel: mostrarSenha,
+                      aoTocar: () =>
+                          setState(() => mostrarSenha = !mostrarSenha),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  _indicadorForca(),
+                  const SizedBox(height: 16),
+                  _campo(
+                    rotulo: 'Confirmar senha',
+                    controller: confirmarSenhaController,
+                    hint: 'Digite a senha novamente',
+                    icon: Icons.lock_outline_rounded,
+                    obscureText: !mostrarConfirmarSenha,
+                    ultimo: true, // Botão "ok" do teclado envia o cadastro
+                    suffixIcon: _olhinho(
+                      visivel: mostrarConfirmarSenha,
+                      aoTocar: () => setState(
+                        () => mostrarConfirmarSenha = !mostrarConfirmarSenha,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+
+                  _botaoCriar(),
+                  const SizedBox(height: 18),
+                  _linkEntrar(),
+                ],
               ),
             ),
           ),
@@ -113,302 +195,234 @@ class _CadastroState extends State<Cadastro> {
     );
   }
 
-  Widget _logo() {
+  // Marca + título + subtítulo
+  Widget _cabecalho() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: 72,
-          height: 72,
+          width: 52,
+          height: 52,
           decoration: BoxDecoration(
-            color: const Color(0xFF6200FF).withValues(alpha: 0.12),
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: const Color(0xFF6200FF).withValues(alpha: 0.35),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF6200FF).withValues(alpha: 0.15),
-                blurRadius: 25,
+            gradient: AppCores.gradRoxo,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: const Center(
+            child: Text(
+              'E',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 26,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -1,
               ),
-            ],
-          ),
-          child: const Icon(
-            Icons.shopping_bag_outlined,
-            color: Color(0xFF7B2CFF),
-            size: 34,
+            ),
           ),
         ),
-        const SizedBox(height: 14),
-        const Text(
-          'EASYSELL',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 30,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 2,
-          ),
-        ),
-        const SizedBox(height: 5),
+        const SizedBox(height: 22),
         Text(
-          'GESTÃO DE VENDAS INTELIGENTE',
+          'Criar sua conta',
           style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.55),
-            fontSize: 9,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1.5,
+            color: c.texto,
+            fontSize: 26,
+            fontWeight: FontWeight.w800,
           ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Preencha seus dados para começar a gerenciar suas vendas.',
+          style: TextStyle(color: c.textoSuave, fontSize: 14, height: 1.45),
         ),
       ],
     );
   }
 
-  Widget _cadastroCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(26),
-      decoration: BoxDecoration(
-        color: const Color(0xFF555965).withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.08),
+  // Título de seção com linha ao lado
+  Widget _secao(String titulo) {
+    return Row(
+      children: [
+        Text(
+          titulo,
+          style: TextStyle(
+            color: c.roxoClaro,
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.4,
+          ),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.28),
-            blurRadius: 30,
-            offset: const Offset(0, 15),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Center(
-            child: Text(
-              'CRIAR SUA CONTA',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
-          const SizedBox(height: 6),
-          Center(
-            child: Text(
-              'Preencha seus dados para começar',
-              style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.65),
-                fontSize: 11,
-              ),
-            ),
-          ),
-          const SizedBox(height: 28),
-          _label('Nome'),
-          const SizedBox(height: 8),
-          _campo(
-            controller: nomeController,
-            hint: 'Digite seu nome',
-            icon: Icons.person_outline,
-          ),
-          const SizedBox(height: 18),
-          _label('E-mail'),
-          const SizedBox(height: 8),
-          _campo(
-            controller: emailController,
-            hint: 'Digite seu e-mail',
-            icon: Icons.email_outlined,
-            keyboardType: TextInputType.emailAddress,
-          ),
-          const SizedBox(height: 18),
-          _label('Senha'),
-          const SizedBox(height: 8),
-          _campo(
-            controller: senhaController,
-            hint: 'Digite sua senha',
-            icon: Icons.lock_outline,
-            obscureText: !mostrarSenha,
-            suffixIcon: IconButton(
-              onPressed: () {
-                setState(() {
-                  mostrarSenha = !mostrarSenha;
-                });
-              },
-              icon: Icon(
-                mostrarSenha
-                    ? Icons.visibility_outlined
-                    : Icons.visibility_off_outlined,
-                color: Colors.white.withValues(alpha: 0.55),
-                size: 18,
-              ),
-            ),
-          ),
-          const SizedBox(height: 18),
-          _label('Confirmar senha'),
-          const SizedBox(height: 8),
-          _campo(
-            controller: confirmarSenhaController,
-            hint: 'Digite a senha novamente',
-            icon: Icons.lock_outline,
-            obscureText: !mostrarConfirmarSenha,
-            suffixIcon: IconButton(
-              onPressed: () {
-                setState(() {
-                  mostrarConfirmarSenha = !mostrarConfirmarSenha;
-                });
-              },
-              icon: Icon(
-                mostrarConfirmarSenha
-                    ? Icons.visibility_outlined
-                    : Icons.visibility_off_outlined,
-                color: Colors.white.withValues(alpha: 0.55),
-                size: 18,
-              ),
-            ),
-          ),
-        ],
-      ),
+        const SizedBox(width: 12),
+        Expanded(child: Container(height: 1, color: c.bordaSutil)),
+      ],
     );
   }
 
-  Widget _label(String texto) {
-    return Text(
-      texto,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 11,
-        fontWeight: FontWeight.w600,
-      ),
-    );
-  }
-
+  // Campo de texto reutilizável: rótulo em cima + campo embaixo
   Widget _campo({
+    required String rotulo,
     required TextEditingController controller,
     required String hint,
     required IconData icon,
     bool obscureText = false,
+    bool ultimo = false,
     TextInputType? keyboardType,
+    TextCapitalization capitalizacao = TextCapitalization.none,
     Widget? suffixIcon,
+    ValueChanged<String>? onChanged,
   }) {
-    return TextField(
-      controller: controller,
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 12,
-      ),
-      decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: TextStyle(
-          color: Colors.white.withValues(alpha: 0.4),
-          fontSize: 11,
-        ),
-        prefixIcon: Icon(
-          icon,
-          color: Colors.white.withValues(alpha: 0.5),
-          size: 18,
-        ),
-        suffixIcon: suffixIcon,
-        filled: true,
-        fillColor: const Color(0xFF3E424D).withValues(alpha: 0.75),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 14,
-          vertical: 15,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.white.withValues(alpha: 0.08),
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            color: Color(0xFF7B2CFF),
-            width: 1.5,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _botoes() {
-    return Row(
-      children: [
-        Expanded(
-          child: SizedBox(
-            height: 48,
-            child: ElevatedButton(
-              onPressed: cadastrar,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6200FF),
-                foregroundColor: Colors.white,
-                elevation: 8,
-                shadowColor: const Color(0xFF6200FF).withValues(alpha: 0.3),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: const Text(
-                'Criar minha conta',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: SizedBox(
-            height: 48,
-            child: OutlinedButton(
-              onPressed: voltarLogin,
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.white,
-                side: BorderSide(
-                  color: Colors.white.withValues(alpha: 0.35),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: const Text(
-                'Voltar',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _rodape() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'EasySell',
+          rotulo,
           style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.35),
-            fontSize: 10,
+            color: c.texto,
+            fontSize: 13,
             fontWeight: FontWeight.w600,
           ),
         ),
-        const SizedBox(height: 4),
-        Text(
-          'Sua gestão. Mais simples. Mais inteligente.',
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.25),
-            fontSize: 8,
+        const SizedBox(height: 8),
+        TextField(
+          controller: controller,
+          obscureText: obscureText,
+          keyboardType: keyboardType,
+          textCapitalization: capitalizacao,
+          onChanged: onChanged,
+          // "próximo" pula para o campo seguinte; no último, envia
+          textInputAction: ultimo ? TextInputAction.done : TextInputAction.next,
+          onSubmitted: ultimo ? (_) => cadastrar() : null,
+          style: TextStyle(color: c.texto, fontSize: 15),
+          cursorColor: c.roxoClaro,
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: TextStyle(color: c.textoFraco, fontSize: 15),
+            prefixIcon: Icon(icon, color: c.textoFraco, size: 20),
+            suffixIcon: suffixIcon,
+            filled: true,
+            fillColor: c.superficie,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide: BorderSide(color: c.bordaSutil),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide: BorderSide(color: c.roxo, width: 1.5),
+            ),
           ),
         ),
       ],
+    );
+  }
+
+  // Botão de mostrar/ocultar senha
+  Widget _olhinho({required bool visivel, required VoidCallback aoTocar}) {
+    return IconButton(
+      onPressed: aoTocar,
+      icon: Icon(
+        visivel ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+        color: c.textoFraco,
+        size: 20,
+      ),
+    );
+  }
+
+  // Barrinhas que indicam a força da senha (só aparecem ao digitar)
+  Widget _indicadorForca() {
+    final forca = _forcaSenha;
+    if (forca == 0) return const SizedBox.shrink();
+
+    // Cor e texto de acordo com a força
+    final Color cor = forca <= 1
+        ? Colors.redAccent
+        : forca == 2
+            ? Colors.orangeAccent
+            : c.verde;
+    final String texto = forca <= 1
+        ? 'Senha fraca'
+        : forca == 2
+            ? 'Senha razoável'
+            : 'Senha forte';
+
+    return Row(
+      children: [
+        // 4 barrinhas: as preenchidas usam a cor da força
+        for (int i = 1; i <= 4; i++) ...[
+          Expanded(
+            child: Container(
+              height: 4,
+              decoration: BoxDecoration(
+                color: i <= forca ? cor : c.bordaSutil,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ),
+          if (i < 4) const SizedBox(width: 6),
+        ],
+        const SizedBox(width: 12),
+        Text(
+          texto,
+          style: TextStyle(
+            color: cor,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Botão principal em gradiente roxo (igual ao do login)
+  Widget _botaoCriar() {
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: AppCores.gradRoxo,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: ElevatedButton(
+          onPressed: cadastrar,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.white,
+            shadowColor: Colors.transparent,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+          child: const Text(
+            'Criar minha conta',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // "Já tem uma conta? Entrar" (faz o mesmo que o antigo botão Voltar)
+  Widget _linkEntrar() {
+    return Center(
+      child: TextButton(
+        onPressed: voltarLogin,
+        child: Text.rich(
+          TextSpan(
+            text: 'Já tem uma conta? ',
+            style: TextStyle(color: c.textoSuave, fontSize: 14),
+            children: [
+              TextSpan(
+                text: 'Entrar',
+                style: TextStyle(
+                  color: c.roxoClaro,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
